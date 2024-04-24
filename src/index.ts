@@ -1,5 +1,6 @@
-import { Server, createServer } from "http";
+import { IncomingMessage, Server, ServerResponse, createServer } from "http";
 import { log } from "./utils";
+import { VuezzRouteHandler } from "./handler";
 
 export type VuezzMode = 'development' | 'production';
 
@@ -16,6 +17,8 @@ export class Vueez {
 		defaultDocument: 'index.html'
 	};
 
+	public handlers: VuezzRouteHandler[] = [];
+
 	private server: Server;
 
 	constructor(private readonly root: string, options: Partial<VueezOptions> = {}) {
@@ -23,10 +26,12 @@ export class Vueez {
 
 		this.server = createServer((req, res) => {
 			const url = new URL(req.url || '/', `http://${req.headers.host}`);
-			res.statusCode = 200;
-			res.end('ok');
 			log('Request', url.pathname + url.search);
-			//handlers.some((handler) => handler.handle(url, res, req));
+			this.handleInQueue(url, res, req).catch(() => {
+				log('Could not route request');
+				res.statusCode = 404;
+				res.end();
+			});
 		});
 
 		process.on('SIGTERM', () => {
@@ -38,6 +43,18 @@ export class Vueez {
 			}
 		});
 	}
+
+	handleInQueue(url: URL, res: ServerResponse<IncomingMessage>, req?: IncomingMessage, index = 0): Promise<void> {
+		let handler = this.handlers[index];
+		if (handler === undefined) {
+			return Promise.reject();
+		}
+		return handler.handle(url, res, req).catch(() => {
+			return this.handleInQueue(url, res, req, index + 1);
+		});
+	}
+
+
 
 	listen(port: number = this.options.port) {
 		this.server.listen(this.options.port, () => {
