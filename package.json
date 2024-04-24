@@ -4,7 +4,8 @@
   "description": "A zero dependency featherweight Vue app server with SSR",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/glinto/vueez/issues"
   },
-  "homepage": "https://github.com/glinto/vueez#readme"
+  "homepage": "https://github.com/glinto/vueez#readme",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "esbuild": "^0.20.2",
+    "typescript": "^5.4.5"
+  }
 }
