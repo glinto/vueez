@@ -1,6 +1,6 @@
 {
   "name": "vueez",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A zero dependency featherweight Vue app server with SSR",
   "main": "index.js",
   "scripts": {
