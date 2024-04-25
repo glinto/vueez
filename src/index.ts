@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse, createServer } from "http";
 import { log } from "./utils";
-import { VuezzRouteHandler } from "./handler";
+import { StaticURLHandler, VuezzRouteHandler } from "./handler";
 
 export type VuezzMode = 'development' | 'production';
 
@@ -23,6 +23,8 @@ export class Vueez {
 
 	constructor(private readonly root: string, options: Partial<VueezOptions> = {}) {
 		this.options = { ...this.options, ...options };
+
+		this.handlers.push(new StaticURLHandler(this.root));
 
 		this.server = createServer((req, res) => {
 			const url = new URL(req.url || '/', `http://${req.headers.host}`);
