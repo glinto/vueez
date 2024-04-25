@@ -28,7 +28,6 @@ export class Vueez {
 			const url = new URL(req.url || '/', `http://${req.headers.host}`);
 			log('Request', url.pathname + url.search);
 			this.handleInQueue(url, res, req).catch(() => {
-				log('Could not route request');
 				res.statusCode = 404;
 				res.end();
 			});
@@ -53,8 +52,6 @@ export class Vueez {
 			return this.handleInQueue(url, res, req, index + 1);
 		});
 	}
-
-
 
 	listen(port: number = this.options.port) {
 		this.server.listen(this.options.port, () => {
