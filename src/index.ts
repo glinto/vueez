@@ -1,12 +1,12 @@
 import { IncomingMessage, Server, ServerResponse, createServer } from "http";
 import { log } from "./utils";
-import { StaticURLHandler, VuezzRouteHandler } from "./handler";
+import { StaticURLHandler, VueezRouteHandler } from "./handler";
 
-export type VuezzMode = 'development' | 'production';
+export type VueezMode = 'development' | 'production';
 
 export interface VueezOptions {
 	port: number;
-	mode: VuezzMode;
+	mode: VueezMode;
 	defaultDocument: string;
 }
 
@@ -17,7 +17,7 @@ export class Vueez {
 		defaultDocument: 'index.html'
 	};
 
-	public handlers: VuezzRouteHandler[] = [];
+	public handlers: VueezRouteHandler[] = [];
 
 	private server: Server;
 

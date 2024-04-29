@@ -3,11 +3,11 @@ import { IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import { log } from "./utils";
 
-export interface VuezzRouteHandler {
+export interface VueezRouteHandler {
 	handle(url: URL, res: ServerResponse<IncomingMessage>, req?: IncomingMessage): Promise<void>;
 }
 
-export class NotFoundHandler implements VuezzRouteHandler {
+export class NotFoundHandler implements VueezRouteHandler {
 	handle(_url: URL, res: ServerResponse<IncomingMessage>): Promise<void> {
 		res.statusCode = 404;
 		res.end();
@@ -15,7 +15,7 @@ export class NotFoundHandler implements VuezzRouteHandler {
 	}
 }
 
-export class StaticURLHandler implements VuezzRouteHandler {
+export class StaticURLHandler implements VueezRouteHandler {
 
 	readonly mimeMappings: { [key: string]: string } = {
 		'.svg': 'image/svg+xml',
