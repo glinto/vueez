@@ -5,9 +5,8 @@ import { log } from './utils.js';
 import path from 'path';
 import pluginVue from 'esbuild-plugin-vue-next';
 
-import { IncomingMessage, Server, ServerResponse, createServer } from "http";
-import { log } from "./utils";
-import { StaticURLHandler, VueezRouteHandler } from "./handler";
+export { type ServeOptions, VueezServer } from './serve.js';
+
 export { type RouteHandler } from './handle.js';
 
 export interface BuildOptionsFiles {
