@@ -2,11 +2,15 @@
 	"name": "vueez",
 	"version": "0.1.0",
 	"description": "A featherweight Vue app builder and server with SSR",
-	"main": "dist/index.js",
+	"main": "build/index.js",
 	"type": "module",
+	"files": [
+		"build"
+	],
 	"scripts": {
 		"build": "tsc --build",
 		"lint": "eslint src/",
+		"prepack": "npm run prettier:check && npm run lint && npm run build",
 		"prettier": "prettier --write src/",
 		"prettier:check": "prettier --check src/",
 		"test": "echo \"Error: no test specified\" && exit 1"
