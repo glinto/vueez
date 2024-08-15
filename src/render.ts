@@ -6,8 +6,7 @@ import { RouteRecordRaw, createMemoryHistory, createRouter, Router } from 'vue-r
 import { renderToString } from 'vue/server-renderer';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-
-export type ServerRenderState = Record<string, string | number | boolean>;
+import { ServerRenderState } from './base.js';
 
 export class RendererHandler implements RouteHandler {
 	constructor(

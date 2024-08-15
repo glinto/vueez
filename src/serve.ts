@@ -1,48 +1,9 @@
-import type { RouteRecordRaw } from 'vue-router';
-import { App } from 'vue';
 import { createServer, IncomingMessage, Server, ServerResponse } from 'http';
 import { log } from './utils.js';
 import { RouteHandler, StaticHandler } from './handle.js';
-import { RendererHandler, ServerRenderState } from './render.js';
+import { RendererHandler } from './render.js';
 import { resolve } from 'path';
-
-export interface ServeOptions {
-	/**
-	 * Whether to serve in development mode. In dev mode the server will not do SSR rendering
-	 */
-	devMode?: boolean;
-	/**
-	 * A function which will create the Vue application that needs to be rendered with SSR. SSR needs a new
-	 * App instance everytime it renders HTML.
-	 */
-	appCreator: () => App;
-	/**
-	 * Route records, on which the App will be server side rendered and served.
-	 */
-	routes: RouteRecordRaw[];
-	/**
-	 * The root directory of static files
-	 */
-	staticDir?: string;
-	/**
-	 * The index template file into which the rendered app will be inserted by replacing the `${html}`
-	 * placeholder
-	 */
-	templateFile: string;
-	/**
-	 * The location of the client bundle files, which will be served under /js/*
-	 */
-	clientOutDir: string;
-	/**
-	 * The TCP port on which the app server will listen
-	 */
-	port: number;
-	/**
-	 * A ServerRenderState object wchich will be provided to the servers ide instantiated app. After rendering
-	 * this state will be compiled into the resulting HTML file where the client can parse it
-	 */
-	serverState?: ServerRenderState;
-}
+import { ServeOptions } from './base.js';
 
 export class VueezServer {
 	public handlers: RouteHandler[] = [];
