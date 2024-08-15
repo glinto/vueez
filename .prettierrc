@@ -1,0 +1,25 @@
+{
+	"tabWidth": 2,
+	"useTabs": true,
+	"semi": true,
+	"singleQuote": true,
+	"singleAttributePerLine": true,
+	"trailingComma": "none",
+	"printWidth": 120,
+
+	"overrides": [
+		{
+			"files": "*.yml",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": false
+			}
+		},
+		{
+			"files": "*.json",
+			"options": {
+				"printWidth": 20
+			}
+		}
+	]
+}

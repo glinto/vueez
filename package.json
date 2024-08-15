@@ -1,29 +1,40 @@
 {
-  "name": "vueez",
-  "version": "0.0.1",
-  "description": "A zero dependency featherweight Vue app server with SSR",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/glinto/vueez.git"
-  },
-  "author": "Csaba Sipocz",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/glinto/vueez/issues"
-  },
-  "homepage": "https://github.com/glinto/vueez#readme",
-  "devDependencies": {
-    "@types/node": "^20.12.7",
-    "esbuild": "^0.20.2",
-    "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "vue": "^3.4.25",
-    "vue-router": "^4.3.2"
-  }
+	"name": "vueez",
+	"version": "0.0.1",
+	"description": "A featherweight Vue app builder and server with SSR",
+	"main": "dist/index.js",
+	"type": "module",
+	"scripts": {
+		"build": "tsc --build",
+		"lint": "eslint src/",
+		"prettier": "prettier --write src/",
+		"prettier:check": "prettier --check src/",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/glinto/vueez.git"
+	},
+	"author": "Csaba Sipocz",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/glinto/vueez/issues"
+	},
+	"homepage": "https://github.com/glinto/vueez#readme",
+	"devDependencies": {
+		"@types/node": "^20.12.7",
+		"@typescript-eslint/eslint-plugin": "^8.1.0",
+		"@typescript-eslint/parser": "^8.1.0",
+		"esbuild": "^0.20.2",
+		"esbuild-plugin-vue-next": "^0.1.4",
+		"eslint": "^9.9.0",
+		"eslint-config-prettier": "^9.1.0",
+		"prettier": "^3.3.3",
+		"typescript": "^5.4.5",
+		"typescript-eslint": "^8.1.0"
+	},
+	"dependencies": {
+		"vue": "^3.4.25",
+		"vue-router": "^4.3.2"
+	}
 }

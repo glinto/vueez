@@ -1,15 +1,13 @@
 {
-	"compilerOptions": {
-		"target": "es2022",
-		"module": "NodeNext",
-		"incremental": true,
-		"declaration": true,
-		"strict": true,
-		"moduleResolution": "NodeNext",
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"rootDir": "./src",
-		"outDir": "./dist"
-	}
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./build",
+    "composite": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "tests"
+  ]
 }
