@@ -66,7 +66,7 @@ In development mode:
 
 ### Building with specifig tsconfig settings
 
-If you want to build with specific tsconfig setting, you can ioptioanlly specify the tsconfig file path in the build options:
+If you want to build with specific `tsconfig` settings, you can ioptioanlly specify the `tsconfig` file path in the build options:
 
 ```typescript
 clientOptions: {
