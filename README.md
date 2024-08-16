@@ -49,7 +49,31 @@ build({
 });
 ```
 
-Then, run the script with `node build.mjs`, and your client app will be ready for deployment.
+Then, run the script with `node build.mjs`, and your client app will be built every time you chage the srouce files.
 
 Vueez does not have a configuration file or a command-line tool. These are the kinds of additional functionalities that
 simply don't fit the minimalistic concept of Vueez.
+
+### Build options
+
+The build options should be self-explanatory, but you it is worth mentioning whatr devMode means.
+
+In development mode:
+
+- the output bundle will not be minified
+- the build will include will include Vue devtools, options API and hydration details for debugging
+- the build script will not exit, it will watch for file changes and rebuild as the code changes
+
+### Building with specifig tsconfig settings
+
+If you want to build with specific tsconfig setting, you can ioptioanlly specify the tsconfig file path in the build options:
+
+```typescript
+clientOptions: {
+	entryPoints: ['src/client/index.ts'],
+	outfile: 'build/client/client.js',
+	tsconfig: 'tsconfig.client.json'
+}
+```
+
+This comes handy, if you want to have different settings for server and client builds (we will cover server bundles later)
