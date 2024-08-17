@@ -66,7 +66,8 @@ In development mode:
 
 ### Building with specifig tsconfig settings
 
-If you want to build with specific `tsconfig` settings, you can ioptioanlly specify the `tsconfig` file path in the build options:
+If you want to build with specific `tsconfig` settings, you can ioptioanlly specify the `tsconfig` file path in the
+build options:
 
 ```typescript
 clientOptions: {
@@ -76,4 +77,17 @@ clientOptions: {
 }
 ```
 
-This comes handy, if you want to have different settings for server and client builds (we will cover server bundles later)
+This comes handy, if you want to have different settings for server and client builds (we will cover server bundles
+later). For client builds, you probably want to work with the esm version of Vue which was created for bundlers such as esbuild.
+Create a `tsconfig.client.json` file in the project root with the following content:
+
+```json
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"paths": {
+			"vue": ["../../node_modules/vue/dist/vue.esm-bundler.js"]
+		}
+	}
+}
+```
