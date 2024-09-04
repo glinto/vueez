@@ -38,6 +38,7 @@ export class VueezBuilder {
 	}
 
 	private async prepareClient(files: BuildOptionsFiles): Promise<esbuild.BuildContext> {
+		const external = Array.isArray(files.external) ? files.external : [];
 		const clientDefine: Record<string, string> = this.options.devMode
 			? {
 					__VUE_PROD_DEVTOOLS__: 'true',
@@ -53,6 +54,7 @@ export class VueezBuilder {
 			outfile: files.outfile,
 			format: 'esm',
 			logLevel: 'info',
+			external: [...external],
 			tsconfig: files.tsconfig ? files.tsconfig : 'tsconfig.json',
 			define: clientDefine,
 			plugins: [
@@ -80,6 +82,8 @@ export class VueezBuilder {
 	private async prepareServer(files: BuildOptionsFiles): Promise<esbuild.BuildContext> {
 		//const builder = this;
 
+		const external = Array.isArray(files.external) ? files.external : [];
+
 		const ctx = await esbuild.context({
 			entryPoints: files.entryPoints,
 			bundle: true,
@@ -88,7 +92,7 @@ export class VueezBuilder {
 			format: 'esm',
 			outfile: files.outfile,
 			logLevel: 'info',
-			external: ['@vue/compiler-sfc', 'esbuild-plugin-vue-next', 'esbuild'],
+			external: ['@vue/compiler-sfc', 'esbuild-plugin-vue-next', 'esbuild', ...external],
 			plugins: [
 				(pluginVue as unknown as () => Plugin)(),
 				{
