@@ -14,6 +14,11 @@ export interface BuildOptionsFiles {
 	 * An optional tsconfig file locations. If not provided, 'tsconfig.json' will be assumed
 	 */
 	tsconfig?: string;
+
+	/**
+	 * External dependencies that should not be bundled. See: https://esbuild.github.io/api/#external
+	 */
+	external?: string[];
 }
 
 export interface BuildOptions {
