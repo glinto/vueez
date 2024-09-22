@@ -70,7 +70,7 @@ export class RendererHandler implements RouteHandler {
 			return Promise.reject('Cannot resolve route');
 		}
 		return router
-			.push({ path: url.pathname, query: queryObject })
+			.push(url.pathname + url.search + url.hash)
 			.then(() => {
 				return router.isReady();
 			})
