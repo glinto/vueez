@@ -34,13 +34,16 @@ export class VueezServer {
 		}
 		this.handlers.push(new StaticHandler(resolve(this.options.clientOutDir), '/js'));
 
+		const ssr = this.options.devMode !== true;
+		if (this.options.ssr !== undefined) ssr = this.options.ssr;
+		
 		this.handlers.push(
 			new RendererHandler(
 				this.options.appCreator,
 				this.options.routes,
 				this.options.templateFile,
 				this.options.serverState,
-				this.options.devMode !== true
+				ssr
 			)
 		);
 	}
