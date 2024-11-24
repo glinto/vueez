@@ -34,9 +34,9 @@ export class VueezServer {
 		}
 		this.handlers.push(new StaticHandler(resolve(this.options.clientOutDir), '/js'));
 
-		const ssr = this.options.devMode !== true;
+		let ssr = this.options.devMode !== true;
 		if (this.options.ssr !== undefined) ssr = this.options.ssr;
-		
+
 		this.handlers.push(
 			new RendererHandler(
 				this.options.appCreator,
