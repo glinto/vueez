@@ -46,8 +46,8 @@ export interface ServeOptions {
 	 */
 	devMode?: boolean;
 	/**
- 	 * Attempt server side rendering. If not specified, true is assumed in production mode (in other words, defaults to !devMode)
- 	 */
+	 * Attempt server side rendering. If not specified, true is assumed in production mode (in other words, defaults to !devMode)
+	 */
 	ssr?: boolean;
 	/**
 	 * A function which will create the Vue application that needs to be rendered with SSR. SSR needs a new
