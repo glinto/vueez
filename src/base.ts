@@ -1,27 +1,15 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { App } from 'vue';
+import { BuildOptions } from 'esbuild';
 
-export interface BuildOptionsFiles {
+export interface MandatoryBuildOptions extends BuildOptions {
 	/**
-	 * Location of all source file paths
-	 */
-	entryPoints: string[];
-	/**
-	 * Destination file path for the bundle
+	 * The output file for the build
 	 */
 	outfile: string;
-	/**
-	 * An optional tsconfig file locations. If not provided, 'tsconfig.json' will be assumed
-	 */
-	tsconfig?: string;
-
-	/**
-	 * External dependencies that should not be bundled. See: https://esbuild.github.io/api/#external
-	 */
-	external?: string[];
 }
 
-export interface BuildOptions {
+export interface VueezBuildOptions {
 	/**
 	 * Whether to build in development mode. In dev mode:
 	 * - The client and server bundles are not minified
@@ -33,11 +21,11 @@ export interface BuildOptions {
 	/**
 	 * Source and destination file locations for the client build
 	 */
-	clientOptions?: BuildOptionsFiles;
+	clientOptions?: BuildOptions;
 	/**
 	 *Source and destination file locations for the server build
 	 */
-	serverOptions?: BuildOptionsFiles;
+	serverOptions?: BuildOptions;
 }
 
 export interface ServeOptions {
