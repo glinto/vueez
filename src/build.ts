@@ -1,15 +1,15 @@
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import esbuild, { type Plugin } from 'esbuild';
+import esbuild, { BuildOptions, type Plugin } from 'esbuild';
 import fs from 'fs';
 import { log } from './utils.js';
 import path from 'path';
 import pluginVue from 'esbuild-plugin-vue-next';
-import { BuildOptions, BuildOptionsFiles } from './base.js';
+import { MandatoryBuildOptions, VueezBuildOptions } from './base.js';
 
 export class VueezBuilder {
 	serverChildProcess: ChildProcessWithoutNullStreams | null = null;
 
-	constructor(private options: BuildOptions) {}
+	constructor(private options: VueezBuildOptions) {}
 
 	async build() {
 		if (this.options.devMode) {
@@ -17,7 +17,10 @@ export class VueezBuilder {
 		}
 
 		if (this.options.clientOptions !== undefined) {
-			const ctx = await this.prepareClient(this.options.clientOptions);
+			const ctx = await this.prepareClient({
+				outfile: 'build/client/client.js',
+				...this.options.clientOptions
+			});
 			if (this.options.devMode) await ctx.watch();
 			else {
 				log(`Building client ${this.options.clientOptions.outfile} in ${process.cwd()}...`);
@@ -27,7 +30,10 @@ export class VueezBuilder {
 		}
 
 		if (this.options.serverOptions !== undefined) {
-			const ctx = await this.prepareServer(this.options.serverOptions);
+			const ctx = await this.prepareServer({
+				outfile: 'build/server/server.js',
+				...this.options.serverOptions
+			});
 			if (this.options.devMode) await ctx.watch();
 			else {
 				log(`Building server ${this.options.serverOptions.outfile} in ${process.cwd()}...`);
@@ -37,8 +43,7 @@ export class VueezBuilder {
 		}
 	}
 
-	private async prepareClient(files: BuildOptionsFiles): Promise<esbuild.BuildContext> {
-		const external = Array.isArray(files.external) ? files.external : [];
+	private async prepareClient(opts: MandatoryBuildOptions): Promise<esbuild.BuildContext> {
 		const clientDefine: Record<string, string> = this.options.devMode
 			? {
 					__VUE_PROD_DEVTOOLS__: 'true',
@@ -47,15 +52,13 @@ export class VueezBuilder {
 				}
 			: {};
 
-		const ctx = await esbuild.context({
-			entryPoints: files.entryPoints,
+		const plugins = Array.isArray(opts.plugins) ? opts.plugins : [];
+
+		const defaultOpts: BuildOptions = {
 			bundle: true,
 			minify: !this.options.devMode, // Minify when building for production
-			outfile: files.outfile,
 			format: 'esm',
 			logLevel: 'info',
-			external: [...external],
-			tsconfig: files.tsconfig ? files.tsconfig : 'tsconfig.json',
 			define: clientDefine,
 			plugins: [
 				(pluginVue as unknown as () => Plugin)(),
@@ -68,29 +71,38 @@ export class VueezBuilder {
 						});
 						onEnd((result) => {
 							if (result.errors.length === 0) {
-								log(`Client bundle size ${outFileStats(files.outfile)}, built in ${new Date().valueOf() - d}ms.`);
+								log(`Client bundle size ${outFileStats(opts.outfile)}, built in ${new Date().valueOf() - d}ms.`);
 							}
 						});
 					}
-				}
+				},
+				...plugins
 			]
+		};
+
+		const ctx = await esbuild.context({
+			...defaultOpts,
+			...opts
 		});
 
 		return ctx;
 	}
 
-	private async prepareServer(files: BuildOptionsFiles): Promise<esbuild.BuildContext> {
+	private async prepareServer(opts: MandatoryBuildOptions): Promise<esbuild.BuildContext> {
 		//const builder = this;
 
-		const external = Array.isArray(files.external) ? files.external : [];
+		const external = Array.isArray(opts.external) ? opts.external : [];
+		const plugins = Array.isArray(opts.plugins) ? opts.plugins : [];
 
-		const ctx = await esbuild.context({
-			entryPoints: files.entryPoints,
+		if (opts.outfile === undefined) {
+			throw new Error('Server build requires an outfile');
+		}
+
+		const defaultOpts: BuildOptions = {
 			bundle: true,
 			minify: true,
 			platform: 'node',
 			format: 'esm',
-			outfile: files.outfile,
 			logLevel: 'info',
 			external: ['@vue/compiler-sfc', 'esbuild-plugin-vue-next', 'esbuild', ...external],
 			plugins: [
@@ -104,22 +116,22 @@ export class VueezBuilder {
 						});
 						onEnd((result) => {
 							if (result.errors.length === 0) {
-								log(`Server bundle size ${outFileStats(files.outfile)}, built in ${new Date().valueOf() - d}ms.`);
+								log(`Server bundle size ${outFileStats(opts.outfile)}, built in ${new Date().valueOf() - d}ms.`);
 								if (this.options.devMode) {
 									if (this.serverChildProcess) {
 										log('Killing dev server...');
 										this.serverChildProcess.on('close', () => {
 											setImmediate(() => {
-												log('Starting dev server...', path.resolve(files.outfile));
-												this.serverChildProcess = spawn('node', [files.outfile]);
+												log('Starting dev server...', path.resolve(opts.outfile));
+												this.serverChildProcess = spawn('node', [opts.outfile]);
 												this.serverChildProcess.stdout.pipe(process.stdout);
 											});
 										});
 										this.serverChildProcess.kill();
 									} else {
 										setImmediate(() => {
-											log('Starting dev server...', path.resolve(files.outfile));
-											this.serverChildProcess = spawn('node', [files.outfile]);
+											log('Starting dev server...', path.resolve(opts.outfile));
+											this.serverChildProcess = spawn('node', [opts.outfile]);
 											this.serverChildProcess.stdout.pipe(process.stdout);
 										});
 									}
@@ -127,8 +139,14 @@ export class VueezBuilder {
 							}
 						});
 					}
-				}
+				},
+				...plugins
 			]
+		};
+
+		const ctx = await esbuild.context({
+			...defaultOpts,
+			...opts
 		});
 
 		return ctx;
