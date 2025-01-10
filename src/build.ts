@@ -55,11 +55,15 @@ export class VueezBuilder {
 		const plugins = Array.isArray(opts.plugins) ? opts.plugins : [];
 
 		const defaultOpts: BuildOptions = {
+			...opts,
 			bundle: true,
-			minify: !this.options.devMode, // Minify when building for production
-			format: 'esm',
-			logLevel: 'info',
-			define: clientDefine,
+			minify: opts.minify ?? !this.options.devMode, // Minify when building for production
+			format: opts.format ?? 'esm',
+			logLevel: opts.logLevel ?? 'info',
+			define: {
+				...(opts.define ?? {}),
+				...clientDefine
+			},
 			plugins: [
 				(pluginVue as unknown as () => Plugin)(),
 				{
@@ -80,10 +84,8 @@ export class VueezBuilder {
 			]
 		};
 
-		const ctx = await esbuild.context({
-			...defaultOpts,
-			...opts
-		});
+		log('Client build options', defaultOpts);
+		const ctx = await esbuild.context(defaultOpts);
 
 		return ctx;
 	}
@@ -94,16 +96,13 @@ export class VueezBuilder {
 		const external = Array.isArray(opts.external) ? opts.external : [];
 		const plugins = Array.isArray(opts.plugins) ? opts.plugins : [];
 
-		if (opts.outfile === undefined) {
-			throw new Error('Server build requires an outfile');
-		}
-
 		const defaultOpts: BuildOptions = {
+			...opts,
 			bundle: true,
-			minify: true,
-			platform: 'node',
-			format: 'esm',
-			logLevel: 'info',
+			minify: opts.minify ?? true,
+			platform: opts.platform ?? 'node',
+			format: opts.format ?? 'esm',
+			logLevel: opts.logLevel ?? 'info',
 			external: ['@vue/compiler-sfc', 'esbuild-plugin-vue-next', 'esbuild', ...external],
 			plugins: [
 				(pluginVue as unknown as () => Plugin)(),
@@ -144,10 +143,7 @@ export class VueezBuilder {
 			]
 		};
 
-		const ctx = await esbuild.context({
-			...defaultOpts,
-			...opts
-		});
+		const ctx = await esbuild.context(defaultOpts);
 
 		return ctx;
 	}
