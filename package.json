@@ -1,6 +1,6 @@
 {
 	"name": "vueez",
-	"version": "0.3.2",
+	"version": "0.4.0",
 	"description": "A featherweight and minimalistic Vue app builder and server with SSR",
 	"main": "build/index.js",
 	"type": "module",
