@@ -1,16 +1,15 @@
 import { log } from './utils.js';
 import { RouteHandler } from './handle.js';
 import { ServerResponse, IncomingMessage } from 'http';
-import { App } from 'vue';
 import { RouteRecordRaw, createMemoryHistory, createRouter, Router } from 'vue-router';
 import { renderToString } from 'vue/server-renderer';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { ServerRenderState } from './base.js';
+import { AppCreator, ServerRenderState } from './base.js';
 
 export class RendererHandler implements RouteHandler {
 	constructor(
-		private readonly appCreatorFn: (state?: ServerRenderState) => App,
+		private readonly appCreatorFn: AppCreator,
 		private readonly routes: RouteRecordRaw[],
 		private readonly templateFile: string,
 		private readonly state?: ServerRenderState,
