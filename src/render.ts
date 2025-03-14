@@ -89,6 +89,12 @@ export class RendererHandler implements RouteHandler {
 			Object.entries(this.state).forEach((entry) => {
 				result = result.replaceAll(`\${${entry[0]}}`, this.htmlSafe(entry[1].toString()));
 			});
+			// insert the state object into the document, before the closing </head> tag
+			// preserve the tabs and spaces before the closing tag to keep the document formatting
+			result = result.replace(
+				/([ \t]*)<\/head>/,
+				`$1<script>window.__VUEEZ_STATE__=${JSON.stringify(this.state)}</script>\n$1</head>`
+			);
 		}
 		return result;
 	}
