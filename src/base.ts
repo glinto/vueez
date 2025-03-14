@@ -39,9 +39,12 @@ export interface ServeOptions {
 	ssr?: boolean;
 	/**
 	 * A function which will create the Vue application that needs to be rendered with SSR. SSR needs a new
-	 * App instance everytime it renders HTML.
+	 * App instance everytime it renders HTML. The function can optionally take a ServerRenderState object
+	 * which will be provided by the server side rendering process and can be used to pass data to the
+	 * application instance. The application can mutate this state object and it will be compiled into the
+	 * resulting HTML file where the client can parse it.
 	 */
-	appCreator: () => App;
+	appCreator: AppCreator;
 	/**
 	 * Route records, on which the App will be server side rendered and served.
 	 */
@@ -71,3 +74,12 @@ export interface ServeOptions {
 }
 
 export type ServerRenderState = Record<string, string | number | boolean>;
+
+/**
+ * A function which will create the Vue application that needs to be rendered with SSR. SSR needs a new
+ * App instance everytime it renders HTML. The function can optionally take a ServerRenderState object
+ * which will be provided by the server side rendering process and can be used to pass data to the
+ * application instance. The application can mutate this state object and it will be compiled into the
+ * resulting HTML file where the client can parse it.
+ */
+export type AppCreator = (state?: ServerRenderState) => App;
