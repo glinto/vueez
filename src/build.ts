@@ -3,7 +3,8 @@ import esbuild, { BuildOptions, type Plugin } from 'esbuild';
 import fs from 'fs';
 import { log } from './utils.js';
 import path from 'path';
-import pluginVue from 'esbuild-plugin-vue-next';
+//import pluginVue from 'esbuild-plugin-vue-next';
+import vuePlugin from 'esbuild-plugin-vue3';
 import { MandatoryBuildOptions, VueezBuildOptions } from './base.js';
 
 export class VueezBuilder {
@@ -65,7 +66,11 @@ export class VueezBuilder {
 				...clientDefine
 			},
 			plugins: [
-				(pluginVue as unknown as () => Plugin)(),
+				vuePlugin({
+					compilerOptions: {
+						isCustomElement: (tag) => tag.startsWith('md-') // Ignore Material Web Components
+					}
+				}) as unknown as Plugin,
 				{
 					name: 'rebuild-log',
 					setup({ onStart, onEnd }) {
@@ -104,7 +109,11 @@ export class VueezBuilder {
 			logLevel: opts.logLevel ?? 'info',
 			external: ['@vue/compiler-sfc', 'esbuild-plugin-vue-next', 'esbuild', ...external],
 			plugins: [
-				(pluginVue as unknown as () => Plugin)(),
+				vuePlugin({
+					compilerOptions: {
+						isCustomElement: (tag) => tag.startsWith('md-') // Ignore Material Web Components
+					}
+				}) as unknown as Plugin,
 				{
 					name: 'rebuild-log',
 					setup: ({ onStart, onEnd }) => {
