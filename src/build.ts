@@ -3,8 +3,10 @@ import esbuild, { BuildOptions, type Plugin } from 'esbuild';
 import fs from 'fs';
 import { log } from './utils.js';
 import path from 'path';
-import pluginVue from 'esbuild-plugin-vue-next';
-import { MandatoryBuildOptions, VueCompileOptions, VueezBuildOptions } from './base.js';
+//import pluginVue from 'esbuild-plugin-vue-next';
+import pluginVue3 from 'esbuild-plugin-vue3';
+import { MandatoryBuildOptions, VueezBuildOptions } from './base.js';
+import { CompilerOptions } from 'vue/compiler-sfc';
 
 export class VueezBuilder {
 	serverChildProcess: ChildProcessWithoutNullStreams | null = null;
@@ -44,7 +46,9 @@ export class VueezBuilder {
 	}
 
 	private createVuePlugin(): esbuild.Plugin {
-		return (pluginVue as unknown as (opts?: VueCompileOptions) => Plugin)(this.options.vueCompileOptions ?? {});
+		return (pluginVue3 as unknown as (opts?: { compilerOptions: CompilerOptions }) => Plugin)({
+			compilerOptions: this.options.vueCompilerOptions ?? {}
+		});
 	}
 
 	private async prepareClient(opts: MandatoryBuildOptions): Promise<esbuild.BuildContext> {
