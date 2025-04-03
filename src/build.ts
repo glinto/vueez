@@ -88,8 +88,6 @@ export class VueezBuilder {
 			]
 		};
 
-		console.log('Default options', defaultOpts);
-
 		const ctx = await esbuild.context(defaultOpts);
 
 		return ctx;
