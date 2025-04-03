@@ -1,6 +1,19 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { App } from 'vue';
+import { SFCTemplateCompileOptions, SFCScriptCompileOptions, SFCAsyncStyleCompileOptions } from '@vue/compiler-sfc';
 import { BuildOptions } from 'esbuild';
+
+export interface VueCompileOptions {
+	templateOptions?: Pick<
+		SFCTemplateCompileOptions,
+		'compiler' | 'preprocessLang' | 'preprocessOptions' | 'compilerOptions' | 'transformAssetUrls'
+	>;
+	scriptOptions?: Pick<SFCScriptCompileOptions, 'babelParserPlugins'>;
+	styleOptions?: Pick<
+		SFCAsyncStyleCompileOptions,
+		'modulesOptions' | 'preprocessLang' | 'preprocessOptions' | 'postcssOptions' | 'postcssPlugins'
+	>;
+}
 
 export interface MandatoryBuildOptions extends BuildOptions {
 	/**
@@ -26,6 +39,10 @@ export interface VueezBuildOptions {
 	 *Source and destination file locations for the server build
 	 */
 	serverOptions?: BuildOptions;
+	/**
+	 * Options for the Vue compiler. The options are passed to the vue-loader
+	 */
+	vueCompileOptions?: VueCompileOptions;
 }
 
 export interface ServeOptions {
