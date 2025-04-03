@@ -4,7 +4,7 @@ import fs from 'fs';
 import { log } from './utils.js';
 import path from 'path';
 import pluginVue from 'esbuild-plugin-vue-next';
-import { MandatoryBuildOptions, VueezBuildOptions } from './base.js';
+import { MandatoryBuildOptions, VueCompileOptions, VueezBuildOptions } from './base.js';
 
 export class VueezBuilder {
 	serverChildProcess: ChildProcessWithoutNullStreams | null = null;
@@ -43,6 +43,10 @@ export class VueezBuilder {
 		}
 	}
 
+	private createVuePlugin(): esbuild.Plugin {
+		return (pluginVue as unknown as (opts?: VueCompileOptions) => Plugin)(this.options.vueCompileOptions ?? {});
+	}
+
 	private async prepareClient(opts: MandatoryBuildOptions): Promise<esbuild.BuildContext> {
 		const clientDefine: Record<string, string> = this.options.devMode
 			? {
@@ -65,7 +69,7 @@ export class VueezBuilder {
 				...clientDefine
 			},
 			plugins: [
-				(pluginVue as unknown as () => Plugin)(),
+				this.createVuePlugin(),
 				{
 					name: 'rebuild-log',
 					setup({ onStart, onEnd }) {
@@ -104,7 +108,7 @@ export class VueezBuilder {
 			logLevel: opts.logLevel ?? 'info',
 			external: ['@vue/compiler-sfc', 'esbuild-plugin-vue-next', 'esbuild', ...external],
 			plugins: [
-				(pluginVue as unknown as () => Plugin)(),
+				this.createVuePlugin(),
 				{
 					name: 'rebuild-log',
 					setup: ({ onStart, onEnd }) => {
