@@ -46,8 +46,19 @@ export class VueezBuilder {
 	}
 
 	private createVuePlugin(): esbuild.Plugin {
-		return (pluginVue3 as unknown as (opts?: { compilerOptions: CompilerOptions }) => Plugin)({
-			compilerOptions: this.options.vueCompilerOptions ?? {}
+		pluginVue3({ disableOptionsApi: false, enableDevTools: true, enableHydrationMismatchDetails: true });
+		return (
+			pluginVue3 as unknown as (opts?: {
+				compilerOptions: CompilerOptions;
+				disableOptionsApi: boolean;
+				enableDevTools: boolean;
+				enableHydrationMismatchDetails: boolean;
+			}) => Plugin
+		)({
+			compilerOptions: this.options.vueCompilerOptions ?? {},
+			disableOptionsApi: !this.options.devMode,
+			enableDevTools: this.options.devMode ?? false,
+			enableHydrationMismatchDetails: this.options.devMode ?? false
 		});
 	}
 
